@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import useNotes from './hooks/useNotes';
+import useSync from './hooks/useSync';
 import Header from './components/Header';
 import NoteList from './components/NoteList';
 import NoteEditor from './components/NoteEditor';
@@ -18,7 +19,8 @@ function useTheme() {
 }
 
 export default function App() {
-  const { notes, create, update, remove, clear, add } = useNotes();
+  const { notes, dead, create, update, remove, clear, add, apply, wipe } = useNotes();
+  const sync = useSync({ notes, dead, apply });
   const [openId, setOpenId] = useState(null);
   const [query, setQuery] = useState('');
   const [showSettings, setShowSettings] = useState(false);
@@ -85,6 +87,8 @@ export default function App() {
           theme={theme}
           setTheme={setTheme}
           notes={notes}
+          sync={sync}
+          onWipe={wipe}
           onImport={add}
           onClear={clear}
           onClose={() => setShowSettings(false)}

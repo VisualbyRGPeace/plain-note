@@ -39,3 +39,14 @@ npm run preview    # xem thử bản build
 - **localStorage KHÔNG mã hóa.** Ai dùng chung máy/profile, extension độc hại, hoặc lỗi XSS đều có thể đọc được. Không nên lưu mật khẩu quan trọng.
 - Cờ "Private" hiện chỉ là nhãn. Muốn mã hóa thật, thêm vào `serialize/deserialize` trong `src/utils/storage.js` (ví dụ Web Crypto AES-GCM + passphrase).
 - Xóa dữ liệu trình duyệt sẽ mất notes: hãy dùng **Settings → Export notes** để sao lưu định kỳ.
+
+## Đồng bộ nhiều thiết bị (tùy chọn, mã hóa đầu-cuối)
+Dùng Firebase (gói Spark miễn phí): Authentication + Firestore. Server chỉ lưu bản mã AES-256-GCM; khóa sinh từ "encryption passphrase" (PBKDF2, 600k vòng) chỉ nằm trong bộ nhớ thiết bị.
+1. console.firebase.google.com → **Add project** (có thể tắt Analytics).
+2. **Authentication → Get started → Sign-in method → Email/Password → Enable**.
+3. **Firestore Database → Create database** (chọn region gần, ví dụ asia-southeast1) → tab **Rules** → dán nội dung `firestore.rules` → **Publish**.
+4. **Project settings → Your apps → Web (</>)** → đăng ký app → copy `firebaseConfig` vào `src/config.js`.
+5. **Authentication → Settings → Authorized domains** → thêm `<user>.github.io`.
+6. Commit, đợi deploy. Mở app → **Settings → Sync**: tạo tài khoản, tạo passphrase. Trên điện thoại đăng nhập cùng tài khoản + passphrase.
+
+Lưu ý: quên passphrase = không khôi phục được note trên cloud. Bản trên máy vẫn lưu dạng thường trong localStorage; Sign out sẽ xóa notes khỏi thiết bị.

@@ -11,7 +11,7 @@ export async function parseImport(file, existing) {
   return data
     .filter((n) => n && typeof n === 'object')
     .map((n) => {
-      const id = typeof n.id === 'string' && n.id && !ids.has(n.id) ? n.id : newId();
+      const id = typeof n.id === 'string' && /^[\w-]{1,100}$/.test(n.id) && !ids.has(n.id) ? n.id : newId();
       ids.add(id);
       return {
         id,

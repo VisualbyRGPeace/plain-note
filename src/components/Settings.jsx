@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react';
 import Confirm from './Confirm';
+import AccountPanel from './AccountPanel';
 import { exportNotes } from '../utils/exportNotes';
 import { parseImport } from '../utils/importNotes';
 
 const THEMES = [['system', 'System'], ['light', 'Light'], ['dark', 'Dark']];
 
-export default function Settings({ theme, setTheme, notes, onImport, onClear, onClose }) {
+export default function Settings({ theme, setTheme, notes, sync, onWipe, onImport, onClear, onClose }) {
   const [confirm, setConfirm] = useState(false);
   const [msg, setMsg] = useState('');
   const file = useRef(null);
@@ -31,6 +32,8 @@ export default function Settings({ theme, setTheme, notes, onImport, onClear, on
           <button className="txt" onClick={onClose}>Close</button>
         </div>
         <p className="muted">Your notes are stored locally in this browser.</p>
+
+        <AccountPanel sync={sync} onWipe={onWipe} />
 
         <h3>Appearance</h3>
         <div className="row">
